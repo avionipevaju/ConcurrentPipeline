@@ -1,6 +1,7 @@
 package org.raf.kids.domaci.nodes;
 
 import org.raf.kids.domaci.transfer.Collection;
+import org.raf.kids.domaci.vo.State;
 
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -9,11 +10,13 @@ public abstract class Node implements Callable<Collection> {
 
     protected String name;
     protected int numberOfExecutingThreads;
+    protected State nodeState;
     protected HashMap<String, Object> parameters;
 
     public Node(String name, int numberOfExecutingThreads) {
         this.name = name;
         this.numberOfExecutingThreads = numberOfExecutingThreads;
+        this.nodeState = State.WAITING;
         parameters = new HashMap<>();
     }
 
@@ -62,11 +65,20 @@ public abstract class Node implements Callable<Collection> {
         this.name = name;
     }
 
+    public State getNodeState() {
+        return nodeState;
+    }
+
+    public void setNodeState(State nodeState) {
+        this.nodeState = nodeState;
+    }
+
     @Override
     public String toString() {
         return "Node{" +
                 "name='" + name + '\'' +
                 ", \n\tnumberOfExecutingThreads=" + numberOfExecutingThreads +
+                ", \n\tnodeState=" + nodeState +
                 ", \n\tparameters=" + parameters +
                 '}';
     }

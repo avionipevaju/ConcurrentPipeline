@@ -1,11 +1,14 @@
 package org.raf.kids.domaci.nodes;
 
 import org.raf.kids.domaci.transfer.Collection;
+import org.raf.kids.domaci.vo.PipelineID;
+import org.raf.kids.domaci.vo.State;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class Worker extends Node {
 
@@ -13,11 +16,17 @@ public class Worker extends Node {
     private Worker nextOperation;
     private List<Input> inputNodes;
     private List<Output> outputNodes;
+    private Collection inputPipelineCollection;
 
     public Worker(String name, int numberOfExecutingThreads) {
         super(name, numberOfExecutingThreads);
         inputNodes = new ArrayList<>();
         outputNodes = new ArrayList<>();
+    }
+
+    public Worker(String name, int numberOfExecutingThreads, Collection inputPipelineCollection) {
+        super(name, numberOfExecutingThreads);
+        this.inputPipelineCollection = inputPipelineCollection;
     }
 
     public Worker(String name, int numberOfExecutingThreads, Worker previousOperation, Worker nextOperation) {
@@ -30,9 +39,25 @@ public class Worker extends Node {
 
     @Override
     public Collection call() throws Exception {
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
-        executorService.invokeAll(inputNodes);
-        executorService.invokeAll(outputNodes);
+        setNodeState(State.ACTIVE);
+        List<Input> inputNodeThreads = new ArrayList<>();
+        List<Output> outputNodeThreads = new ArrayList<>();
+        for(Input node: inputNodes) {
+            for (int i = 0; i< node.getNumberOfExecutingThreads();i++){
+                inputNodeThreads.add(node);
+            }
+        }
+        for(Output node: outputNodes) {
+            for (int i = 0; i< node.getNumberOfExecutingThreads();i++){
+                outputNodeThreads.add(node);
+            }
+        }
+        ExecutorService inputNodeExecutorService = Executors.newCachedThreadPool();
+        ExecutorService outputNodeExecutorService = Executors.newCachedThreadPool();
+        List<Future<Collection>> results = inputNodeExecutorService.invokeAll(inputNodeThreads);
+        for (Future<Collection> future: results) {
+            System.out.println(future.get().peek(new PipelineID(12)).getValue("TEST"));
+        }
         return null;
     }
 
@@ -96,15 +121,26 @@ public class Worker extends Node {
         return outputNodes;
     }
 
+    public Collection getInputPipelineCollection() {
+        return inputPipelineCollection;
+    }
+
+    public void setInputPipelineCollection(Collection inputPipelineCollection) {
+        this.inputPipelineCollection = inputPipelineCollection;
+    }
+
     @Override
     public String toString() {
         return "Worker{" +
+                "previousOperation=" + previousOperation +
+                ", \nnextOperation=" + nextOperation +
                 ", \ninputNodes=" + inputNodes +
                 ", \noutputNodes=" + outputNodes +
+                ", \ninputPipelineCollection=" + inputPipelineCollection +
                 ", \nname='" + name + '\'' +
                 ", \nnumberOfExecutingThreads=" + numberOfExecutingThreads +
+                ", \nnodeState=" + nodeState +
                 ", \nparameters=" + parameters +
                 '}';
     }
-
 }

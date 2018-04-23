@@ -44,4 +44,12 @@ public class Data implements PipelineData {
     public PipelineID getPipelineDataID() {
         return pipelineDataID;
     }
+
+    @Override
+    public String toString() {
+        return "Data{" +
+                "\npipelineDataID=" + pipelineDataID +
+                ", \ntransferData=" + transferData +
+                '}';
+    }
 }

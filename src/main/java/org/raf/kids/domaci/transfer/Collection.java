@@ -23,10 +23,15 @@ public class Collection implements PipelineCollection {
     //TODO call is not blocking
     @Override
     public PipelineData peek(PipelineID id) {
-        if (transferCollection == null || id.getId() < 0 || id.getId() >= transferCollection.size()) {
+        if (transferCollection == null || id.getId() < 0) {
             return null;
         }
-        return transferCollection.get(id.getId());
+        for(PipelineData data: transferCollection){
+            if (data.getID().getId() == id.getId()){
+                return data;
+            }
+        }
+        return null;
     }
 
     //TODO block current thread if collection is empty
@@ -50,5 +55,13 @@ public class Collection implements PipelineCollection {
 
     public PipelineID getPipelineCollectionId() {
         return pipelineCollectionId;
+    }
+
+    @Override
+    public String toString() {
+        return "Collection{" +
+                "\npipelineCollectionId=" + pipelineCollectionId +
+                ", \ntransferCollection=" + transferCollection +
+                '}';
     }
 }

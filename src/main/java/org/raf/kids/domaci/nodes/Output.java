@@ -8,7 +8,6 @@ public class Output extends Node {
         super(name, numberOfExecutingThreads);
     }
 
-
     @Override
     public Collection call() throws Exception {
         return null;

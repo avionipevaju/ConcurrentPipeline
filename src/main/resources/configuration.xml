@@ -3,11 +3,11 @@
 <Workers>
     <Worker>
         <Name>Split by Age</Name>
-        <ThreadCount>2</ThreadCount>
+        <ThreadCount>3</ThreadCount>
         <Inputs>
             <Input>
                 <Name>SQL Reader</Name>
-                <ThreadCount>1</ThreadCount>
+                <ThreadCount>2</ThreadCount>
                 <Parameters>
                     <Parameter>
                         <Key>Parameter</Key>
