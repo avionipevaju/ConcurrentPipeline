@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE Workers SYSTEM "elements.dtd">
+<Workers>
+    <Worker>
+        <Name>Split by Age</Name>
+        <ThreadCount>2</ThreadCount>
+        <Inputs>
+            <Input>
+                <Name>SQL Reader</Name>
+                <ThreadCount>1</ThreadCount>
+                <Parameters>
+                    <Parameter>
+                        <Key>Parameter</Key>
+                        <Value>Value</Value>
+                    </Parameter>
+                    <Parameter>
+                        <Key>a</Key>
+                        <Value>b</Value>
+                    </Parameter>
+                </Parameters>
+            </Input>
+        </Inputs>
+        <Outputs>
+            <Output>
+                <Name>Log Writer</Name>
+                <ThreadCount>4</ThreadCount>
+                <Parameters></Parameters>
+            </Output>
+        </Outputs>
+        <Parameters>
+            <Parameter>
+                <Key>Have another</Key>
+                <Value>parameter</Value>
+            </Parameter>
+        </Parameters>
+    </Worker>
+    <Worker>
+        <Name>Find Average</Name>
+        <ThreadCount>2</ThreadCount>
+        <Inputs>
+        </Inputs>
+        <Outputs>
+            <Output>
+                <Name>Log Writer</Name>
+                <ThreadCount>4</ThreadCount>
+                <Parameters>
+                    <Parameter>
+                        <Key>Destination</Key>
+                        <Value>URL</Value>
+                    </Parameter>
+                </Parameters>
+            </Output>
+            <Output>
+                <Name>GUI Display</Name>
+                <ThreadCount>1</ThreadCount>
+                <Parameters></Parameters>
+            </Output>
+            <Output>
+                <Name>PDF Writer</Name>
+                <ThreadCount>3</ThreadCount>
+                <Parameters></Parameters>
+            </Output>
+        </Outputs>
+        <Parameters></Parameters>
+    </Worker>
+</Workers>

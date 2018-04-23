@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT Workers (Worker*)>
+<!ELEMENT Worker (Name,ThreadCount, Inputs, Outputs, Parameters)>
+<!ELEMENT Name (#PCDATA)>
+<!ELEMENT ThreadCount (#PCDATA)>
+<!ELEMENT Input (Name, ThreadCount, Parameters)>
+<!ELEMENT Output (Name, ThreadCount, Parameters)>
+<!ELEMENT Inputs (Input*)>
+<!ELEMENT Outputs (Output*)>
+<!ELEMENT Key (#PCDATA)>
+<!ELEMENT Value (#PCDATA)>
+<!ELEMENT Parameters (Parameter*)>
+<!ELEMENT Parameter (Key, Value)>
