@@ -1,8 +1,11 @@
 package org.raf.kids.domaci.nodes;
 
-import java.util.HashMap;
+import org.raf.kids.domaci.transfer.Collection;
 
-public abstract class Node implements Runnable {
+import java.util.HashMap;
+import java.util.concurrent.Callable;
+
+public abstract class Node implements Callable<Collection> {
 
     protected String name;
     protected int numberOfExecutingThreads;

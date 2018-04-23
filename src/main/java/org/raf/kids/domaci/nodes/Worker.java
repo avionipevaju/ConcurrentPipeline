@@ -1,7 +1,11 @@
 package org.raf.kids.domaci.nodes;
 
+import org.raf.kids.domaci.transfer.Collection;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Worker extends Node {
 
@@ -25,13 +29,11 @@ public class Worker extends Node {
     }
 
     @Override
-    public void run() {
-        for(Input node: inputNodes){
-            node.run();
-        }
-        for(Output node: outputNodes){
-            node.run();
-        }
+    public Collection call() throws Exception {
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        executorService.invokeAll(inputNodes);
+        executorService.invokeAll(outputNodes);
+        return null;
     }
 
     public Input getInputNode(int index) {
