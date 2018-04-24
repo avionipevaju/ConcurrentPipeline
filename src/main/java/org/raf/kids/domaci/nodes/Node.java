@@ -75,8 +75,7 @@ public abstract class Node implements Callable<Collection> {
 
     @Override
     public String toString() {
-        return "Node{" +
-                "name='" + name + '\'' +
+        return  "\n\tname='" + name + '\'' +
                 ", \n\tnumberOfExecutingThreads=" + numberOfExecutingThreads +
                 ", \n\tnodeState=" + nodeState +
                 ", \n\tparameters=" + parameters +

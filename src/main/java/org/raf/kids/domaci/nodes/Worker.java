@@ -17,6 +17,8 @@ public class Worker extends Node {
     private List<Input> inputNodes;
     private List<Output> outputNodes;
     private Collection inputPipelineCollection;
+    private boolean startNode;
+    private boolean endNode;
 
     public Worker(String name, int numberOfExecutingThreads) {
         super(name, numberOfExecutingThreads);
@@ -129,10 +131,26 @@ public class Worker extends Node {
         this.inputPipelineCollection = inputPipelineCollection;
     }
 
+    public boolean isStartNode() {
+        return startNode;
+    }
+
+    public void setStartNode(boolean startNode) {
+        this.startNode = startNode;
+    }
+
+    public boolean isEndNode() {
+        return endNode;
+    }
+
+    public void setEndNode(boolean endNode) {
+        this.endNode = endNode;
+    }
+
     @Override
     public String toString() {
-        return "Worker{" +
-                "previousOperation=" + previousOperation +
+        return name +"[" +
+                "  \npreviousOperation=" + previousOperation +
                 ", \nnextOperation=" + nextOperation +
                 ", \ninputNodes=" + inputNodes +
                 ", \noutputNodes=" + outputNodes +
@@ -141,6 +159,8 @@ public class Worker extends Node {
                 ", \nnumberOfExecutingThreads=" + numberOfExecutingThreads +
                 ", \nnodeState=" + nodeState +
                 ", \nparameters=" + parameters +
+                ", \nstartNode=" + startNode +
+                ", \nendNode=" + endNode +
                 '}';
     }
 }

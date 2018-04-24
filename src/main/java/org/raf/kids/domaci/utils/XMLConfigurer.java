@@ -43,7 +43,13 @@ public class XMLConfigurer {
                 String key  = parameters.item(j).getChildNodes().item(0).getTextContent();
                 String value = parameters.item(j).getChildNodes().item(1).getTextContent();
                 currentWorker.addParameter(key, value);
+            }
 
+            if(currentWorker.getParameter("Start") != null){
+                currentWorker.setStartNode(true);
+            }
+            if(currentWorker.getParameter("End") != null){
+                currentWorker.setEndNode(true);
             }
 
             NodeList inputNodes = doc.getElementsByTagName("Inputs").item(index).getChildNodes();

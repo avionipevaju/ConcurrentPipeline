@@ -29,8 +29,8 @@
         </Outputs>
         <Parameters>
             <Parameter>
-                <Key>Have another</Key>
-                <Value>parameter</Value>
+                <Key>Start</Key>
+                <Value>true</Value>
             </Parameter>
         </Parameters>
     </Worker>
@@ -61,6 +61,11 @@
                 <Parameters></Parameters>
             </Output>
         </Outputs>
-        <Parameters></Parameters>
+        <Parameters>
+            <Parameter>
+                <Key>End</Key>
+                <Value>true</Value>
+            </Parameter>
+        </Parameters>
     </Worker>
 </Workers>
