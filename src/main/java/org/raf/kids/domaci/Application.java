@@ -7,6 +7,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,6 +22,7 @@ public class Application implements Runnable {
         XMLConfigurer xmlConfigurer =  new XMLConfigurer("src/main/resources/configuration.xml");
         ArrayList<Worker> workers;
         ArrayList<Worker> pipelineJob = new ArrayList<>();
+        HashMap<Worker, ArrayList<Worker>> workerThreads = new HashMap<>();
         try {
             workers = xmlConfigurer.parseConfiguration();
             System.out.println("~~~ Workers loaded ~~~");
@@ -42,23 +44,20 @@ public class Application implements Runnable {
             System.out.println("~~~ Generated pipeline job ~~~");
             System.out.print("start");
             for (Worker worker: pipelineJob) {
+                ArrayList<Worker> tempWorkerThreads = new ArrayList<>();
+                for(int i = 0; i < worker.getNumberOfExecutingThreads(); i++) {
+                    tempWorkerThreads.add(worker);
+                }
+                workerThreads.put(worker, tempWorkerThreads);
                 System.out.print(" -> " + worker.getName());
             }
-            System.out.print(" -> end");
+            System.out.println(" -> end");
+            ExecutorService executorService = Executors.newCachedThreadPool();
+            executorService.submit(workers.get(0));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-      /*  ArrayList<Worker> workerThreads = new ArrayList<>();
-        for (Worker worker: workers) {
-            for(int i = 0; i < worker.getNumberOfExecutingThreads(); i++) {
-                workerThreads.add(worker);
-            }
-        }
-        ExecutorService executorService = Executors.newCachedThreadPool();
-        executorService.invokeAll(workerThreads);
-        executorService.shutdown();*/
-        /*executorService.submit(workers.get(1));
-        executorService.invokeAll(workers);*/
 
     }
 }

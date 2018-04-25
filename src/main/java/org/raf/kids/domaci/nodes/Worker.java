@@ -1,10 +1,10 @@
 package org.raf.kids.domaci.nodes;
 
 import org.raf.kids.domaci.transfer.Collection;
-import org.raf.kids.domaci.vo.PipelineID;
 import org.raf.kids.domaci.vo.State;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,23 +42,35 @@ public class Worker extends Node {
     @Override
     public Collection call() throws Exception {
         setNodeState(State.ACTIVE);
-        List<Input> inputNodeThreads = new ArrayList<>();
-        List<Output> outputNodeThreads = new ArrayList<>();
+        ExecutorService inputExecutorService = Executors.newCachedThreadPool();
+        ExecutorService workerExecutorService = Executors.newFixedThreadPool(numberOfExecutingThreads);
+        HashMap<Output, ExecutorService> outputExecutorThreads = new HashMap<>();
+        List<Future<Collection>> resultList = new ArrayList<>();
+
+        for(Output output: outputNodes) {
+            outputExecutorThreads.put(output, Executors.newFixedThreadPool(output.numberOfExecutingThreads));
+        }
+
         for(Input node: inputNodes) {
             for (int i = 0; i< node.getNumberOfExecutingThreads();i++){
-                inputNodeThreads.add(node);
+                resultList.add(inputExecutorService.submit(node));
             }
+
         }
-        for(Output node: outputNodes) {
-            for (int i = 0; i< node.getNumberOfExecutingThreads();i++){
-                outputNodeThreads.add(node);
+        for (Future<Collection> inputRes: resultList) {
+            if(!inputRes.isDone()){
+              //  System.out.println("not done");
             }
-        }
-        ExecutorService inputNodeExecutorService = Executors.newCachedThreadPool();
-        ExecutorService outputNodeExecutorService = Executors.newCachedThreadPool();
-        List<Future<Collection>> results = inputNodeExecutorService.invokeAll(inputNodeThreads);
-        for (Future<Collection> future: results) {
-            System.out.println(future.get().peek(new PipelineID(12)).getValue("TEST"));
+            //System.out.println("done");
+            Future<Collection> workerRes = workerExecutorService.submit(new WorkerJob(inputRes.get()));
+            while(!workerRes.isDone()){
+              //  System.out.println("not done");
+            }
+            //System.out.println("done");
+            for(Output output: outputExecutorThreads.keySet()) {
+                output.setInputPipelineCollection(workerRes.get());
+                outputExecutorThreads.get(output).submit(output);
+            }
         }
         return null;
     }

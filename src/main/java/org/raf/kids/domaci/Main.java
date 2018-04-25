@@ -6,6 +6,8 @@ public class Main {
 
         Application consoleApp = new Application();
         consoleApp.run();
+        /*Thread t = new Thread(consoleApp);
+        t.start();*/
 
     }
 
