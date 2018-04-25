@@ -2,6 +2,7 @@ package org.raf.kids.domaci.nodes.implementations;
 
 import org.raf.kids.domaci.nodes.Output;
 import org.raf.kids.domaci.transfer.Collection;
+import org.raf.kids.domaci.vo.PipelineID;
 
 public class PDFWriter extends Output {
 
@@ -11,10 +12,8 @@ public class PDFWriter extends Output {
 
     @Override
     public Collection call() throws Exception {
-        while (!inputPipelineCollection.isDone()){
-
-        }
-        System.out.println(name + ": " + inputPipelineCollection.get());
+        while (!inputPipelineCollection.isDone()){ }
+        System.out.println(name + ": " + inputPipelineCollection.get().peek(new PipelineID(12)));
         return inputPipelineCollection.get();
     }
 

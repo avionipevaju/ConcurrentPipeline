@@ -1,6 +1,7 @@
 package org.raf.kids.domaci.nodes;
 
 import org.raf.kids.domaci.transfer.Collection;
+import org.raf.kids.domaci.vo.PipelineID;
 import org.raf.kids.domaci.vo.State;
 
 import java.util.*;
@@ -55,12 +56,26 @@ public class Worker extends Node {
             for (int i = 0; i< input.getNumberOfExecutingThreads();i++){
                 Future<Collection> inputResult = inputExecutorService.submit(input);
                 Future<Collection> workerResult = workerExecutorService.submit(new WorkerJob(inputResult));
+                if(nextOperation != null) {
+                    nextOperation.setInputPipelineCollection(workerResult);
+                    nextOperation.call();
+                }
                 for(Output output: outputExecutorThreads.keySet()){
                     output.setInputPipelineCollection(workerResult);
                     outputExecutorThreads.get(output).submit(output);
                 }
             }
         }
+
+        if(inputPipelineCollection != null) {
+            while(!inputPipelineCollection.isDone()) { }
+            Future<Collection> workerResult = workerExecutorService.submit(new WorkerJob(inputPipelineCollection));
+            if(nextOperation != null) {
+                nextOperation.setInputPipelineCollection(workerResult);
+                nextOperation.call();
+            }
+        }
+
         return null;
     }
 
@@ -150,9 +165,11 @@ public class Worker extends Node {
 
     @Override
     public String toString() {
+        String prev = previousOperation!=null?previousOperation.getName():"null";
+        String next = nextOperation!=null?nextOperation.getName():"null";
         return name +"[" +
-                "  \npreviousOperation=" + previousOperation +
-                ", \nnextOperation=" + nextOperation +
+                "  \npreviousOperation=" +  prev +
+                ", \nnextOperation=" +next +
                 ", \ninputNodes=" + inputNodes +
                 ", \noutputNodes=" + outputNodes +
                 ", \ninputPipelineCollection=" + inputPipelineCollection +

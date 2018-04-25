@@ -1,7 +1,6 @@
 package org.raf.kids.domaci;
 
 import org.raf.kids.domaci.nodes.Worker;
-import org.raf.kids.domaci.utils.NodeMapper;
 import org.raf.kids.domaci.utils.XMLConfigurer;
 import org.xml.sax.SAXException;
 
@@ -40,9 +39,11 @@ public class Application implements Runnable {
                 if (entered == 0) {
                     break;
                 }
-                pipelineJob.add(workers.get(entered-1));
+                Worker worker = workers.get(entered-1);
+                pipelineJob.add(worker);
             }
             System.out.println("~~~ Generated pipeline job ~~~");
+            connectNodes(pipelineJob);
             System.out.print("start");
             for (Worker worker: pipelineJob) {
                 ArrayList<Worker> tempWorkerThreads = new ArrayList<>();
@@ -60,5 +61,18 @@ public class Application implements Runnable {
             e.printStackTrace();
         }
 
+    }
+
+    private void connectNodes(ArrayList<Worker> workerList) {
+        for (int index = 0; index < workerList.size(); index ++) {
+            Worker current = workerList.get(index);
+            if(!current.isStartNode()){
+                current.setPreviousOperation(workerList.get(index -1));
+            }
+            if(!current.isEndNode()){
+                current.setNextOperation(workerList.get(index + 1));
+            }
+
+        }
     }
 }

@@ -15,7 +15,6 @@ public class SQLReader extends Input {
 
     @Override
     public Collection call() throws Exception {
-        Thread.sleep(200);
         System.out.println(name + getClass().getName());
         Thread.sleep(new Random().nextInt(1000));
         Collection collection = new Collection(new PipelineID(1));

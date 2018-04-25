@@ -15,10 +15,8 @@ public class WorkerJob implements Callable<Collection> {
 
     @Override
     public Collection call() throws Exception {
-        while (!inputCollection.isDone()) {
-
-        }
-        System.out.println("DONE");
+        while (!inputCollection.isDone()) { }
+        System.out.println("Worker job done");
         return inputCollection.get();
     }
 }
