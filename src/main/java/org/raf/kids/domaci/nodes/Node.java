@@ -20,6 +20,9 @@ public abstract class Node implements Callable<Collection> {
         parameters = new HashMap<>();
     }
 
+    public Node() {
+    }
+
     public Object getParameter(String parameterKey) {
         if (parameterKey == null) {
             return null;

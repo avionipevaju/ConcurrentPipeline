@@ -16,11 +16,7 @@ public class Input extends Node {
 
     @Override
     public Collection call() throws Exception {
-        Thread.sleep(new Random().nextInt(1000));
-        Collection collection = new Collection(new PipelineID(1));
-        Data data = new Data(new PipelineID(12));
-        data.setValue("TEST", a++);
-        collection.put(data);
-        return collection;
+        System.out.println(name + getClass().getName());
+        return null;
     }
 }

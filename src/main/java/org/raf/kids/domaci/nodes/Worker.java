@@ -3,9 +3,7 @@ package org.raf.kids.domaci.nodes;
 import org.raf.kids.domaci.transfer.Collection;
 import org.raf.kids.domaci.vo.State;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -16,7 +14,7 @@ public class Worker extends Node {
     private Worker nextOperation;
     private List<Input> inputNodes;
     private List<Output> outputNodes;
-    private Collection inputPipelineCollection;
+    private Future<Collection> inputPipelineCollection;
     private boolean startNode;
     private boolean endNode;
 
@@ -26,7 +24,7 @@ public class Worker extends Node {
         outputNodes = new ArrayList<>();
     }
 
-    public Worker(String name, int numberOfExecutingThreads, Collection inputPipelineCollection) {
+    public Worker(String name, int numberOfExecutingThreads, Future<Collection> inputPipelineCollection) {
         super(name, numberOfExecutingThreads);
         this.inputPipelineCollection = inputPipelineCollection;
     }
@@ -45,31 +43,22 @@ public class Worker extends Node {
         ExecutorService inputExecutorService = Executors.newCachedThreadPool();
         ExecutorService workerExecutorService = Executors.newFixedThreadPool(numberOfExecutingThreads);
         HashMap<Output, ExecutorService> outputExecutorThreads = new HashMap<>();
-        List<Future<Collection>> resultList = new ArrayList<>();
 
         for(Output output: outputNodes) {
-            outputExecutorThreads.put(output, Executors.newFixedThreadPool(output.numberOfExecutingThreads));
-        }
-
-        for(Input node: inputNodes) {
-            for (int i = 0; i< node.getNumberOfExecutingThreads();i++){
-                resultList.add(inputExecutorService.submit(node));
+            for (int i = 0; i< output.getNumberOfExecutingThreads();i++){
+                outputExecutorThreads.put(output, Executors.newFixedThreadPool(output.getNumberOfExecutingThreads()));
             }
 
         }
-        for (Future<Collection> inputRes: resultList) {
-            if(!inputRes.isDone()){
-              //  System.out.println("not done");
-            }
-            //System.out.println("done");
-            Future<Collection> workerRes = workerExecutorService.submit(new WorkerJob(inputRes.get()));
-            while(!workerRes.isDone()){
-              //  System.out.println("not done");
-            }
-            //System.out.println("done");
-            for(Output output: outputExecutorThreads.keySet()) {
-                output.setInputPipelineCollection(workerRes.get());
-                outputExecutorThreads.get(output).submit(output);
+
+        for(Input input: inputNodes) {
+            for (int i = 0; i< input.getNumberOfExecutingThreads();i++){
+                Future<Collection> inputResult = inputExecutorService.submit(input);
+                Future<Collection> workerResult = workerExecutorService.submit(new WorkerJob(inputResult));
+                for(Output output: outputExecutorThreads.keySet()){
+                    output.setInputPipelineCollection(workerResult);
+                    outputExecutorThreads.get(output).submit(output);
+                }
             }
         }
         return null;
@@ -135,11 +124,11 @@ public class Worker extends Node {
         return outputNodes;
     }
 
-    public Collection getInputPipelineCollection() {
+    public Future<Collection> getInputPipelineCollection() {
         return inputPipelineCollection;
     }
 
-    public void setInputPipelineCollection(Collection inputPipelineCollection) {
+    public void setInputPipelineCollection(Future<Collection> inputPipelineCollection) {
         this.inputPipelineCollection = inputPipelineCollection;
     }
 

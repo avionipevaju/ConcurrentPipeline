@@ -1,8 +1,13 @@
 package org.raf.kids.domaci.utils;
 
 import org.raf.kids.domaci.nodes.Input;
+import org.raf.kids.domaci.nodes.Node;
 import org.raf.kids.domaci.nodes.Output;
 import org.raf.kids.domaci.nodes.Worker;
+import org.raf.kids.domaci.nodes.implementations.GuiDisplay;
+import org.raf.kids.domaci.nodes.implementations.LogWriter;
+import org.raf.kids.domaci.nodes.implementations.PDFWriter;
+import org.raf.kids.domaci.nodes.implementations.SQLReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -12,6 +17,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 public class XMLConfigurer {
@@ -58,7 +65,7 @@ public class XMLConfigurer {
                 String inputName = nodes.item(0).getTextContent();
                 String inputThreadCount = nodes.item(1).getTextContent();
                 parameters = nodes.item(2).getChildNodes();
-                Input input = new Input(inputName, Integer.parseInt(inputThreadCount));
+                Input input = resolveInputNode(inputName, Integer.parseInt(inputThreadCount));
                 for (int j = 0; j < parameters.getLength(); j++) {
                     String key  = parameters.item(j).getChildNodes().item(0).getTextContent();
                     String value = parameters.item(j).getChildNodes().item(1).getTextContent();
@@ -74,7 +81,7 @@ public class XMLConfigurer {
                 String outputName = nodes.item(0).getTextContent();
                 String outputThreadCount = nodes.item(1).getTextContent();
                 parameters = nodes.item(2).getChildNodes();
-                Output output = new Output(outputName, Integer.parseInt(outputThreadCount));
+                Output output = resolveOutputNode(outputName, Integer.parseInt(outputThreadCount));
                 for (int j = 0; j < parameters.getLength(); j++) {
                     String key  = parameters.item(j).getChildNodes().item(0).getTextContent();
                     String value = parameters.item(j).getChildNodes().item(1).getTextContent();
@@ -94,5 +101,27 @@ public class XMLConfigurer {
 
     public void setConfigurationPath(String configurationPath) {
         this.configurationPath = configurationPath;
+    }
+
+    public Input resolveInputNode(String nodeName, int threadCount) {
+        switch (nodeName) {
+            case "SQL Reader":
+                return new SQLReader(nodeName, threadCount);
+            default:
+                return null;
+        }
+    }
+
+    public Output resolveOutputNode(String nodeName, int threadCount) {
+        switch (nodeName){
+            case "PDF Writer":
+                return new PDFWriter(nodeName, threadCount);
+            case "Log Writer":
+                return new LogWriter(nodeName, threadCount);
+            case "GUI Display":
+                return new GuiDisplay(nodeName, threadCount);
+            default:
+                return null;
+        }
     }
 }

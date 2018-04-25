@@ -1,6 +1,7 @@
 package org.raf.kids.domaci;
 
 import org.raf.kids.domaci.nodes.Worker;
+import org.raf.kids.domaci.utils.NodeMapper;
 import org.raf.kids.domaci.utils.XMLConfigurer;
 import org.xml.sax.SAXException;
 

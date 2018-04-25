@@ -2,9 +2,11 @@ package org.raf.kids.domaci.nodes;
 
 import org.raf.kids.domaci.transfer.Collection;
 
+import java.util.concurrent.Future;
+
 public class Output extends Node {
 
-    private Collection inputPipelineCollection;
+    protected Future<Collection> inputPipelineCollection;
 
     public Output(String name, int numberOfExecutingThreads) {
         super(name, numberOfExecutingThreads);
@@ -12,15 +14,18 @@ public class Output extends Node {
 
     @Override
     public Collection call() throws Exception {
-        System.out.println(name + ": " + inputPipelineCollection);
-        return null;
+        while (!inputPipelineCollection.isDone()){
+
+        }
+        System.out.println(name + ": " + inputPipelineCollection.get());
+        return inputPipelineCollection.get();
     }
 
-    public Collection getInputPipelineCollection() {
+    public Future<Collection> getInputPipelineCollection() {
         return inputPipelineCollection;
     }
 
-    public void setInputPipelineCollection(Collection inputPipelineCollection) {
+    public void setInputPipelineCollection(Future<Collection> inputPipelineCollection) {
         this.inputPipelineCollection = inputPipelineCollection;
     }
 }
