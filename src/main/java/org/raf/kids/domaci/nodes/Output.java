@@ -3,9 +3,10 @@ package org.raf.kids.domaci.nodes;
 import org.raf.kids.domaci.transfer.Collection;
 import org.raf.kids.domaci.vo.PipelineID;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-public class Output extends Node {
+public class Output extends Node implements Callable<Collection> {
 
     protected Future<Collection> inputPipelineCollection;
 

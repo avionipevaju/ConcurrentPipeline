@@ -2,7 +2,9 @@ package org.raf.kids.domaci.nodes;
 
 import org.raf.kids.domaci.transfer.Collection;
 
-public class Input extends Node {
+import java.util.concurrent.Callable;
+
+public class Input extends Node implements Callable<Collection> {
 
     public Input(String name, int numberOfExecutingThreads) {
         super(name, numberOfExecutingThreads);

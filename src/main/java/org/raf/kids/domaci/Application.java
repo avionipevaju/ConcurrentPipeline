@@ -1,6 +1,7 @@
 package org.raf.kids.domaci;
 
 import org.raf.kids.domaci.nodes.Worker;
+import org.raf.kids.domaci.transfer.Collection;
 import org.raf.kids.domaci.utils.XMLConfigurer;
 import org.xml.sax.SAXException;
 
@@ -9,15 +10,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class Application implements Runnable {
 
     Scanner inputScanner = new Scanner(System.in);
 
-    @Override
-    public void run() {
+    public Application() {
         System.out.println("~~~ Loading config file ~~~");
         XMLConfigurer xmlConfigurer =  new XMLConfigurer("src/main/resources/configuration.xml");
         ArrayList<Worker> workers;
@@ -55,11 +57,21 @@ public class Application implements Runnable {
             }
             System.out.println(" -> end");
             ExecutorService executorService = Executors.newCachedThreadPool();
-            executorService.submit(workers.get(0));
-
+            Future<Collection> result;
+           /* System.out.println("~~~Start the node by entering its number~~~");
+            int entered = inputScanner.nextInt();*/
+            while (true) {
+                System.out.println("~~~Start the node by entering its number~~~");
+                int entered = inputScanner.nextInt();
+                result = executorService.submit(workers.get(entered-1));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void run() {
 
     }
 

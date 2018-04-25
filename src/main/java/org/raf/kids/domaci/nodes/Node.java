@@ -6,7 +6,7 @@ import org.raf.kids.domaci.vo.State;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 
-public abstract class Node implements Callable<Collection> {
+public abstract class Node {
 
     protected String name;
     protected int numberOfExecutingThreads;

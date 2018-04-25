@@ -5,11 +5,12 @@ import org.raf.kids.domaci.vo.PipelineID;
 import org.raf.kids.domaci.vo.State;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class Worker extends Node {
+public class Worker extends Node implements Callable<Collection>{
 
     private Worker previousOperation;
     private Worker nextOperation;
