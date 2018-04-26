@@ -18,10 +18,6 @@ public class LogWriter extends Output {
     public LogWriter(String name, int numberOfExecutingThreads) {
         super(name, numberOfExecutingThreads);
         logFile = new File("src/main/resources/log.txt");
-        try {
-        } catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -36,10 +32,9 @@ public class LogWriter extends Output {
                 readWriteLock.writeLock().unlock();
             }
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            //System.out.println("ERROR");
+            //System.out.println(e.getMessage());
         }
-        //readWriteLock.writeLock().unlock();
-        //System.out.println(name + ": " + inputPipelineCollection.get());
         return inputPipelineCollection.get();
     }
 }

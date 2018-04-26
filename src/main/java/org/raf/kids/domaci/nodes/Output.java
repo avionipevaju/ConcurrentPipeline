@@ -17,7 +17,7 @@ public class Output extends Node implements Callable<Collection> {
     @Override
     public Collection call() throws Exception {
         while (!inputPipelineCollection.isDone()){ }
-        System.out.println(name + ": " + inputPipelineCollection);
+       // System.out.println(name + ": " + inputPipelineCollection);
         return inputPipelineCollection.get();
     }
 

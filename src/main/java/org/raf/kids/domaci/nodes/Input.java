@@ -12,7 +12,7 @@ public class Input extends Node implements Callable<Collection> {
 
     @Override
     public Collection call() throws Exception {
-        System.out.println(name + getClass().getName());
+        //System.out.println(name + getClass().getName());
         return null;
     }
 }

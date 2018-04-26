@@ -21,7 +21,6 @@ public class WorkerJob extends Node implements Callable<Collection> {
         if(parameters.get("age") != null) {
             String [] paramList = parameters.get("age").split(",");
 
-
         }
     }
 
@@ -36,12 +35,11 @@ public class WorkerJob extends Node implements Callable<Collection> {
                 Collection input = inputCollection.get();
                 Collection output = input;
                 if (input == null) {
-                   // System.out.println("Worker received empty input");
                     return null;
                 } else {
-                    /*while(!input.isEmpty()){
-                        //System.out.println(input.take());
-                    }*/
+                    while(!input.isEmpty()){
+                        System.out.println(input.take());
+                    }
                 }
                 return output;
             } catch (Exception e) {
