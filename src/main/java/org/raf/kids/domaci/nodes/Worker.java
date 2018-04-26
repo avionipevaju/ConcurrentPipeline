@@ -80,6 +80,10 @@ public class Worker extends Node implements Callable<Collection>{
                 nextOperation.setInputPipelineCollection(workerResult);
                 nextOperation.call();
             }
+            for(Output output: outputExecutorThreads.keySet()){
+                output.setInputPipelineCollection(workerResult);
+                outputExecutorThreads.get(output).submit(output);
+            }
         }
 
         return null;

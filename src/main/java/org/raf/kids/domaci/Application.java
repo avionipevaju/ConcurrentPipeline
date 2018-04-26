@@ -58,13 +58,16 @@ public class Application implements Runnable {
             System.out.println(" -> end");
             ExecutorService executorService = Executors.newCachedThreadPool();
             Future<Collection> result;
-           /* System.out.println("~~~Start the node by entering its number~~~");
-            int entered = inputScanner.nextInt();*/
             while (true) {
-                System.out.println("~~~Start the node by entering its number~~~");
+                System.out.println("~~~Start the node by entering its number. Enter 0 for termination~~~");
                 int entered = inputScanner.nextInt();
+                if(entered <= 0) {
+                    break;
+                }
                 result = executorService.submit(workers.get(entered-1));
             }
+            System.out.println("~~~System shutdown~~~");
+            System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();
         }

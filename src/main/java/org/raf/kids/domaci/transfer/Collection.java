@@ -4,15 +4,18 @@ import org.raf.kids.domaci.vo.PipelineID;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
 
 public class Collection implements PipelineCollection {
 
     private PipelineID pipelineCollectionId;
-    private List<PipelineData> transferCollection;//TODO BlockingQueue
+    private BlockingQueue<PipelineData> transferCollection;
 
     public Collection(PipelineID pipelineCollectionId) {
         this.pipelineCollectionId = pipelineCollectionId;
-        transferCollection = new ArrayList<>();
+        transferCollection = new ArrayBlockingQueue<>(10);
     }
 
     @Override
@@ -20,7 +23,6 @@ public class Collection implements PipelineCollection {
         return pipelineCollectionId;
     }
 
-    //TODO call is not blocking
     @Override
     public PipelineData peek(PipelineID id) {
         if (transferCollection == null || id.getId() < 0) {
@@ -34,19 +36,19 @@ public class Collection implements PipelineCollection {
         return null;
     }
 
-    //TODO block current thread if collection is empty
     @Override
     public PipelineData take() {
-        PipelineData toTake = transferCollection.get(transferCollection.size());
-        //transferCollection.remove();
+        PipelineData toTake = null;
+        try {
+            toTake = transferCollection.take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return toTake;
     }
 
     @Override
     public void put(PipelineData data) {
-        if (transferCollection == null) {
-            transferCollection = new ArrayList<>();
-        }
         transferCollection.add(data);
     }
 
