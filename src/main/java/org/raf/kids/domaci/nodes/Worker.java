@@ -1,7 +1,7 @@
 package org.raf.kids.domaci.nodes;
 
+import org.raf.kids.domaci.nodes.implementations.WorkerJob;
 import org.raf.kids.domaci.transfer.Collection;
-import org.raf.kids.domaci.vo.PipelineID;
 import org.raf.kids.domaci.vo.State;
 
 import java.util.*;
@@ -58,14 +58,16 @@ public class Worker extends Node implements Callable<Collection>{
             for (int i = 0; i< input.getNumberOfExecutingThreads();i++){
                 try{
                     Future<Collection> inputResult = inputExecutorService.submit(input);
-                    Future<Collection> workerResult = workerExecutorService.submit(new WorkerJob(inputResult));
+                    Future<Collection> workerResult = workerExecutorService.submit(new WorkerJob(inputResult, parameters));
                     if(nextOperation != null) {
                         nextOperation.setInputPipelineCollection(workerResult);
                         nextOperation.call();
                     }
                     for(Output output: outputExecutorThreads.keySet()){
                         output.setInputPipelineCollection(workerResult);
-                        outputExecutorThreads.get(output).submit(output);
+                        for(int w = 0; w<output.getNumberOfExecutingThreads(); w++) {
+                            outputExecutorThreads.get(output).submit(output);
+                        }
                     }
                 }catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -75,14 +77,16 @@ public class Worker extends Node implements Callable<Collection>{
 
         if(inputPipelineCollection != null) {
             while(!inputPipelineCollection.isDone()) { }
-            Future<Collection> workerResult = workerExecutorService.submit(new WorkerJob(inputPipelineCollection));
+            Future<Collection> workerResult = workerExecutorService.submit(new WorkerJob(inputPipelineCollection, parameters));
             if(nextOperation != null) {
                 nextOperation.setInputPipelineCollection(workerResult);
                 nextOperation.call();
             }
             for(Output output: outputExecutorThreads.keySet()){
                 output.setInputPipelineCollection(workerResult);
-                outputExecutorThreads.get(output).submit(output);
+                for(int w = 0; w<output.getNumberOfExecutingThreads(); w++) {
+                    outputExecutorThreads.get(output).submit(output);
+                }
             }
         }
 
