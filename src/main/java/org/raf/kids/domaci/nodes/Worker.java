@@ -9,6 +9,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Worker extends Node implements Callable<Collection>{
 
@@ -41,7 +42,7 @@ public class Worker extends Node implements Callable<Collection>{
 
     @Override
     public Collection call() throws Exception {
-        setNodeState(State.ACTIVE);
+        setNodeState(new AtomicReference<>(State.ACTIVE));
         ExecutorService inputExecutorService = Executors.newCachedThreadPool();
         ExecutorService workerExecutorService = Executors.newFixedThreadPool(numberOfExecutingThreads);
         HashMap<Output, ExecutorService> outputExecutorThreads = new HashMap<>();
@@ -55,15 +56,19 @@ public class Worker extends Node implements Callable<Collection>{
 
         for(Input input: inputNodes) {
             for (int i = 0; i< input.getNumberOfExecutingThreads();i++){
-                Future<Collection> inputResult = inputExecutorService.submit(input);
-                Future<Collection> workerResult = workerExecutorService.submit(new WorkerJob(inputResult));
-                if(nextOperation != null) {
-                    nextOperation.setInputPipelineCollection(workerResult);
-                    nextOperation.call();
-                }
-                for(Output output: outputExecutorThreads.keySet()){
-                    output.setInputPipelineCollection(workerResult);
-                    outputExecutorThreads.get(output).submit(output);
+                try{
+                    Future<Collection> inputResult = inputExecutorService.submit(input);
+                    Future<Collection> workerResult = workerExecutorService.submit(new WorkerJob(inputResult));
+                    if(nextOperation != null) {
+                        nextOperation.setInputPipelineCollection(workerResult);
+                        nextOperation.call();
+                    }
+                    for(Output output: outputExecutorThreads.keySet()){
+                        output.setInputPipelineCollection(workerResult);
+                        outputExecutorThreads.get(output).submit(output);
+                    }
+                }catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
             }
         }

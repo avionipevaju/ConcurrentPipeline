@@ -1,22 +1,21 @@
 package org.raf.kids.domaci.nodes;
 
-import org.raf.kids.domaci.transfer.Collection;
 import org.raf.kids.domaci.vo.State;
 
 import java.util.HashMap;
-import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class Node {
 
     protected String name;
     protected int numberOfExecutingThreads;
-    protected State nodeState;
+    protected AtomicReference<State> nodeState;
     protected HashMap<String, String> parameters;
 
     public Node(String name, int numberOfExecutingThreads) {
         this.name = name;
         this.numberOfExecutingThreads = numberOfExecutingThreads;
-        this.nodeState = State.WAITING;
+        this.nodeState = new AtomicReference<>(State.WAITING);
         parameters = new HashMap<>();
     }
 
@@ -68,11 +67,11 @@ public abstract class Node {
         this.name = name;
     }
 
-    public State getNodeState() {
+    public AtomicReference<State> getNodeState() {
         return nodeState;
     }
 
-    public void setNodeState(State nodeState) {
+    public void setNodeState(AtomicReference<State> nodeState) {
         this.nodeState = nodeState;
     }
 

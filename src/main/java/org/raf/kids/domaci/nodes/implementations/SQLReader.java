@@ -5,6 +5,7 @@ import org.raf.kids.domaci.transfer.Collection;
 import org.raf.kids.domaci.transfer.Data;
 import org.raf.kids.domaci.vo.Constants;
 import org.raf.kids.domaci.vo.PipelineID;
+import org.raf.kids.domaci.vo.State;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -27,23 +28,35 @@ public class SQLReader extends Input {
 
     @Override
     public Collection call() throws Exception {
-        System.out.println(name + getClass().getName());
-        if(!connectionOpen.get()){
-            synchronized (connectionLock) {
-                System.out.println("~~~Opening database connection~~~");
-                Class.forName("com.mysql.jdbc.Driver");
-                connection = DriverManager.getConnection(parameters.get(Constants.DATABASE),parameters.get(Constants
-                        .USERNAME),parameters.get(Constants.PASSWORD));
-                connectionOpen.set(true);
-            }
+        if(getNodeState().get().equals(State.WAITING)) {
+            getNodeState().set(State.ACTIVE);
         }
-
-        Thread.sleep(new Random().nextInt(1000));
-        Collection collection = new Collection(new PipelineID(1));
-        Data data = new Data(new PipelineID(12));
-        data.setValue("TEST", 12);
-        collection.put(data);
-        return collection;
+        if(getNodeState().get().equals(State.ACTIVE)) {
+            if(!connectionOpen.get()){
+                synchronized (connectionLock) {
+                    System.out.println("~~~Opening database connection~~~");
+                    Class.forName("com.mysql.jdbc.Driver");
+                    try {
+                        connection = DriverManager.getConnection(parameters.get(Constants.DATABASE), parameters.get(Constants
+                                .USERNAME), parameters.get(Constants.PASSWORD));
+                        connectionOpen.set(true);
+                    } catch (Exception e){
+                        getNodeState().set(State.STOPPED);
+                        System.out.println(e.getMessage());
+                        System.out.println("~~~Stopping node: " + name +" ~~~");
+                        return null;
+                    }
+                }
+             }
+            System.out.println(name + getClass().getName());
+            Thread.sleep(new Random().nextInt(1000));
+            Collection collection = new Collection(new PipelineID(1));
+            Data data = new Data(new PipelineID(12));
+            data.setValue("TEST", 12);
+            collection.put(data);
+            return collection;
+        }
+        return null;
     }
 
 }
