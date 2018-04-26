@@ -10,12 +10,16 @@
                 <ThreadCount>2</ThreadCount>
                 <Parameters>
                     <Parameter>
-                        <Key>Parameter</Key>
-                        <Value>Value</Value>
+                        <Key>database</Key>
+                        <Value>jdbc:mysql://localhost:3306/raf</Value>
                     </Parameter>
                     <Parameter>
-                        <Key>a</Key>
-                        <Value>b</Value>
+                        <Key>username</Key>
+                        <Value>root</Value>
+                    </Parameter>
+                    <Parameter>
+                        <Key>password</Key>
+                        <Value></Value>
                     </Parameter>
                 </Parameters>
             </Input>

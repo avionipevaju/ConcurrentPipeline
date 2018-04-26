@@ -3,6 +3,7 @@ package org.raf.kids.domaci.nodes.implementations;
 import org.raf.kids.domaci.nodes.Input;
 import org.raf.kids.domaci.transfer.Collection;
 import org.raf.kids.domaci.transfer.Data;
+import org.raf.kids.domaci.vo.Constants;
 import org.raf.kids.domaci.vo.PipelineID;
 
 import java.sql.Connection;
@@ -29,9 +30,10 @@ public class SQLReader extends Input {
         System.out.println(name + getClass().getName());
         if(!connectionOpen.get()){
             synchronized (connectionLock) {
-                System.out.println("ONE");
+                System.out.println("~~~Opening database connection~~~");
                 Class.forName("com.mysql.jdbc.Driver");
-                connection= DriverManager.getConnection("jdbc:mysql://localhost:3306/raf","root","");
+                connection = DriverManager.getConnection(parameters.get(Constants.DATABASE),parameters.get(Constants
+                        .USERNAME),parameters.get(Constants.PASSWORD));
                 connectionOpen.set(true);
             }
         }

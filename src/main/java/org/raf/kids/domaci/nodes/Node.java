@@ -11,7 +11,7 @@ public abstract class Node {
     protected String name;
     protected int numberOfExecutingThreads;
     protected State nodeState;
-    protected HashMap<String, Object> parameters;
+    protected HashMap<String, String> parameters;
 
     public Node(String name, int numberOfExecutingThreads) {
         this.name = name;
@@ -52,11 +52,11 @@ public abstract class Node {
         this.numberOfExecutingThreads = numberOfExecutingThreads;
     }
 
-    public HashMap<String, Object> getParameters() {
+    public HashMap<String, String> getParameters() {
         return parameters;
     }
 
-    public void setParameters(HashMap<String, Object> parameters) {
+    public void setParameters(HashMap<String, String> parameters) {
         this.parameters = parameters;
     }
 

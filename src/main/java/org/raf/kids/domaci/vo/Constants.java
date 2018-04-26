@@ -7,4 +7,8 @@ public interface Constants {
     String LOG_WRITER = "Log Writer";
     String PDF_WRITER = "PDF Writer";
 
+    String DATABASE = "database";
+    String USERNAME = "username";
+    String PASSWORD = "password";
+
 }
