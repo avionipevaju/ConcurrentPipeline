@@ -33,4 +33,12 @@ public class PipelineID implements Comparable<PipelineID>{
         } else
             return 0;
     }
+
+    @Override
+    public String toString() {
+        return "PipelineID{" +
+                "dataId=" + dataId +
+                ", nodeName='" + nodeName + '\'' +
+                '}';
+    }
 }

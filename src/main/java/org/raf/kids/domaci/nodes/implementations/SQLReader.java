@@ -6,6 +6,7 @@ import org.raf.kids.domaci.transfer.Data;
 import org.raf.kids.domaci.vo.Constants;
 import org.raf.kids.domaci.vo.PipelineID;
 import org.raf.kids.domaci.vo.State;
+import org.raf.kids.domaci.vo.User;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -66,9 +67,8 @@ public class SQLReader extends Input {
                         do{
                             String username = rs.getString("username");
                             int age = rs.getInt("age");
-                            data.setValue("username", username);
-                            data.setValue("age", age);
-                            //System.out.println("RECORD: " + username + age);
+                            User user = new User(username, age);
+                            data.setValue("user", user);
                             collection.put(data);
                         }
                         while (rs.next());
