@@ -8,6 +8,7 @@ import org.raf.kids.domaci.vo.PipelineID;
 import org.raf.kids.domaci.vo.State;
 
 import java.sql.*;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,7 +30,7 @@ public class SQLReader extends Input {
 
     @Override
     public Collection call() throws Exception {
-        Collection collection =  new Collection(new PipelineID(123));
+        Collection collection =  new Collection(new PipelineID(12, name));
         if(getNodeState().get().equals(State.WAITING)) {
             getNodeState().set(State.ACTIVE);
         }
@@ -58,7 +59,7 @@ public class SQLReader extends Input {
                         query = "SELECT * FROM `Users` WHERE id=" + id;
                         stmt = connection.createStatement();
                         ResultSet rs = stmt.executeQuery(query);
-                        Data data = new Data(new PipelineID(id));
+                        Data data = new Data(new PipelineID(id, name));
                         if(!rs.next()){
                             break;
                         }
@@ -67,7 +68,7 @@ public class SQLReader extends Input {
                             int age = rs.getInt("age");
                             data.setValue("username", username);
                             data.setValue("age", age);
-                            System.out.println("RECORD: " + username + age);
+                            //System.out.println("RECORD: " + username + age);
                             collection.put(data);
                         }
                         while (rs.next());

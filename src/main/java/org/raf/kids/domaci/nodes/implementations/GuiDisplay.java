@@ -12,7 +12,7 @@ public class GuiDisplay extends Output {
     @Override
     public Collection call() throws Exception {
         while (!inputPipelineCollection.isDone()){ }
-        System.out.println(name + ": " + inputPipelineCollection.get().peek(new PipelineID(12)));
+        //System.out.println(name + ": " + inputPipelineCollection.get());
         return inputPipelineCollection.get();
     }
 }

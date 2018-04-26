@@ -2,10 +2,7 @@ package org.raf.kids.domaci.transfer;
 
 import org.raf.kids.domaci.vo.PipelineID;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 
 public class Collection implements PipelineCollection {
@@ -25,11 +22,11 @@ public class Collection implements PipelineCollection {
 
     @Override
     public PipelineData peek(PipelineID id) {
-        if (transferCollection == null || id.getId() < 0) {
+        if (transferCollection == null || id.getDataId() < 0) {
             return null;
         }
         for(PipelineData data: transferCollection){
-            if (data.getID().getId() == id.getId()){
+            if (data.getID().getDataId() == id.getDataId()){
                 return data;
             }
         }
@@ -54,6 +51,13 @@ public class Collection implements PipelineCollection {
 
     public PipelineID getPipelineCollectionId() {
         return pipelineCollectionId;
+    }
+
+    public boolean isEmpty() {
+        if(transferCollection.isEmpty())
+            return true;
+        else
+            return false;
     }
 
     @Override

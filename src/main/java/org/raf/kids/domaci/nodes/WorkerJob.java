@@ -31,8 +31,9 @@ public class WorkerJob extends Node implements Callable<Collection> {
                     System.out.println("Worker received empty input");
                     return null;
                 } else {
-                    System.out.println(input);
-                    System.out.println("Worker job done");
+                    while(!input.isEmpty()){
+                        System.out.println(input.take());
+                    }
                 }
                 return input;
             } catch (Exception e) {

@@ -30,16 +30,15 @@
                 <ThreadCount>4</ThreadCount>
                 <Parameters></Parameters>
             </Output>
-            <Output>
-                <Name>PDF Writer</Name>
-                <ThreadCount>3</ThreadCount>
-                <Parameters></Parameters>
-            </Output>
         </Outputs>
         <Parameters>
             <Parameter>
                 <Key>Start</Key>
                 <Value>true</Value>
+            </Parameter>
+            <Parameter>
+                <Key>age</Key>
+                <Value>20-</Value>
             </Parameter>
         </Parameters>
     </Worker>
