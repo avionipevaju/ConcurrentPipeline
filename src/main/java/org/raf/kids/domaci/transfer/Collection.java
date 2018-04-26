@@ -8,7 +8,7 @@ import java.util.List;
 public class Collection implements PipelineCollection {
 
     private PipelineID pipelineCollectionId;
-    private List<PipelineData> transferCollection;
+    private List<PipelineData> transferCollection;//TODO BlockingQueue
 
     public Collection(PipelineID pipelineCollectionId) {
         this.pipelineCollectionId = pipelineCollectionId;
@@ -36,12 +36,9 @@ public class Collection implements PipelineCollection {
 
     //TODO block current thread if collection is empty
     @Override
-    public PipelineData take(PipelineID id) {
-        if (transferCollection == null || id.getId() < 0 || id.getId() >= transferCollection.size()) {
-            return null;
-        }
-        PipelineData toTake = transferCollection.get(id.getId());
-        transferCollection.remove(id.getId());
+    public PipelineData take() {
+        PipelineData toTake = transferCollection.get(transferCollection.size());
+        //transferCollection.remove();
         return toTake;
     }
 

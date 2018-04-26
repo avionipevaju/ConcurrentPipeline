@@ -17,6 +17,7 @@ public class SQLReader extends Input {
     private AtomicBoolean connectionOpen;
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private Connection connection;
+    private Object connectionLock = new Object();
 
     public SQLReader(String name, int numberOfExecutingThreads) {
         super(name, numberOfExecutingThreads);
@@ -27,7 +28,7 @@ public class SQLReader extends Input {
     public Collection call() throws Exception {
         System.out.println(name + getClass().getName());
         if(!connectionOpen.get()){
-            synchronized (this) {
+            synchronized (connectionLock) {
                 System.out.println("ONE");
                 Class.forName("com.mysql.jdbc.Driver");
                 connection= DriverManager.getConnection("jdbc:mysql://localhost:3306/raf","root","");

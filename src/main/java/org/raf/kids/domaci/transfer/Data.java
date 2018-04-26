@@ -3,15 +3,17 @@ package org.raf.kids.domaci.transfer;
 import org.raf.kids.domaci.vo.PipelineID;
 
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class Data implements PipelineData {
 
     private PipelineID pipelineDataID;
-    private HashMap<String, Object> transferData;
+    private ConcurrentMap<String, Object> transferData;
 
     public Data(PipelineID pipelineDataID) {
         this.pipelineDataID = pipelineDataID;
-        transferData = new HashMap<>();
+        transferData = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -25,7 +27,7 @@ public class Data implements PipelineData {
             return null;
         }
         if (transferData == null) {
-            transferData = new HashMap<>();
+            transferData = new ConcurrentHashMap<>();
         }
         return  transferData.get(key);
     }
@@ -36,7 +38,7 @@ public class Data implements PipelineData {
             return;
         }
         if (transferData == null) {
-            transferData = new HashMap<>();
+            transferData = new ConcurrentHashMap<>();
         }
         transferData.put(key, value);
     }
